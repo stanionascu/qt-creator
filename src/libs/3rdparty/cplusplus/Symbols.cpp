@@ -239,7 +239,7 @@ bool Function::isSignatureEqualTo(const Function *other, Matcher *matcher) const
     for (unsigned i = 0; i < argc; ++i) {
         Symbol *l = argumentAt(i);
         Symbol *r = other->argumentAt(i);
-        if (! l->type().match(r->type(), matcher))
+        if (! l->type().signatureTypeMatch(r->type(), matcher))
             return false;
     }
     return true;

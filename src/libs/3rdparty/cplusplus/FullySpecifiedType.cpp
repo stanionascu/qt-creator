@@ -214,6 +214,22 @@ unsigned FullySpecifiedType::flags() const
 void FullySpecifiedType::setFlags(unsigned flags)
 { _flags = flags; }
 
+bool FullySpecifiedType::signatureTypeMatch(const FullySpecifiedType &otherTy, Matcher *matcher) const
+{
+    // When comparing function signatures the top-level cv-qualifiers of the arguments and return type
+    // should be ignored (N3337 - §8.3.5.5).
+    static const unsigned flagsMask = [](){
+        FullySpecifiedType ty;
+        ty.f._isSigned = true;
+        ty.f._isUnsigned = true;
+        return ty._flags;
+    }();
+
+    if ((_flags & flagsMask) != (otherTy._flags & flagsMask))
+        return false;
+    return type()->match(otherTy.type(), matcher);
+}
+
 bool FullySpecifiedType::match(const FullySpecifiedType &otherTy, Matcher *matcher) const
 {
     static const unsigned flagsMask = [](){
