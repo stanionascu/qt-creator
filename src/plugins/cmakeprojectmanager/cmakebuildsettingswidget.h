@@ -37,6 +37,7 @@ class QLabel;
 class QPushButton;
 class QTreeView;
 class QSortFilterProxyModel;
+class QMenu;
 QT_END_NAMESPACE
 
 namespace CMakeProjectManager {
@@ -64,6 +65,8 @@ private:
     ConfigModel *m_configModel;
     QSortFilterProxyModel *m_configFilterModel;
     Utils::ProgressIndicator *m_progressIndicator;
+    QPushButton *m_addButton;
+    QMenu *m_addButtonMenu;
     QPushButton *m_editButton;
     QPushButton *m_resetButton;
     QCheckBox *m_showAdvancedCheckBox;
