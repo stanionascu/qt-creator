@@ -237,17 +237,24 @@ void CMakeBuildStep::run(QFutureInterface<bool> &fi)
         bc = qobject_cast<CMakeBuildConfiguration *>(target()->activeBuildConfiguration());
     QTC_ASSERT(bc, return);
 
-    if (bc->persistCMakeState()) {
-        emit addOutput(tr("Persisting CMake state..."), BuildStep::MessageOutput);
-
-        m_runTrigger = connect(bc, &CMakeBuildConfiguration::dataAvailable,
-                               this, [this, &fi]() { runImpl(fi); });
-        m_errorTrigger = connect(bc, &CMakeBuildConfiguration::errorOccured,
-                                 this, [this, &fi]() {
-            fi.reportResult(false);
-        });
+    if (bc->isParsing()) {
+        emit addOutput(tr("CMake is already running..."),
+                       BuildStep::ErrorMessageOutput);
+        fi.reportResult(false);
+        emit finished();
     } else {
-        runImpl(fi);
+        if (bc->persistCMakeState()) {
+            emit addOutput(tr("Persisting CMake state..."), BuildStep::MessageOutput);
+
+            m_runTrigger = connect(bc, &CMakeBuildConfiguration::dataAvailable,
+                                   this, [this, &fi]() { runImpl(fi); });
+            m_errorTrigger = connect(bc, &CMakeBuildConfiguration::errorOccured,
+                                     this, [this, &fi]() {
+                fi.reportResult(false);
+            });
+        } else {
+            runImpl(fi);
+        }
     }
 }
 
