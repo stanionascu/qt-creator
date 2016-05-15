@@ -344,7 +344,6 @@ void BuildDirManager::extractData()
 
     m_projectName = sourceDirectory().fileName();
     m_files.append(new ProjectExplorer::FileNode(topCMake, ProjectExplorer::ProjectFileType, false));
-    m_watchedFiles.insert(topCMake);
 
     // Find cbp file
     QString cbpFile = CMakeManager::findCbpFile(workDirectory().toString());
@@ -352,6 +351,8 @@ void BuildDirManager::extractData()
         return;
 
     m_watcher->addPath(cbpFile);
+
+    m_watchedFiles.insert(Utils::FileName::fromString(cbpFile));
 
     // setFolderName
     CMakeCbpParser cbpparser;
@@ -362,20 +363,11 @@ void BuildDirManager::extractData()
     m_projectName = cbpparser.projectName();
 
     m_files = cbpparser.fileList();
-    QSet<Utils::FileName> projectFiles;
     if (cbpparser.hasCMakeFiles()) {
         m_files.append(cbpparser.cmakeFileList());
-        foreach (const ProjectExplorer::FileNode *node, cbpparser.cmakeFileList())
-            projectFiles.insert(node->filePath());
     } else {
         m_files.append(new ProjectExplorer::FileNode(topCMake, ProjectExplorer::ProjectFileType, false));
-        projectFiles.insert(topCMake);
     }
-
-    m_watchedFiles = projectFiles;
-    const QStringList toWatch
-            = Utils::transform(m_watchedFiles.toList(), [](const Utils::FileName &fn) { return fn.toString(); });
-    m_watcher->addPaths(toWatch);
 
     m_buildTargets = cbpparser.buildTargets();
     m_projectTarget = cbpparser.projectTarget();
