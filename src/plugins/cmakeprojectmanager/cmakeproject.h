@@ -99,6 +99,7 @@ public:
     QStringList files(FilesMode fileMode) const override;
     QStringList buildTargetTitles(bool runnable = false) const;
     QList<CMakeBuildTarget> buildTargets() const;
+    const CMakeBuildTarget &projectTarget() const;
     bool hasBuildTarget(const QString &title) const;
 
     CMakeBuildTarget buildTargetForTitle(const QString &title);

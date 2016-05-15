@@ -213,6 +213,8 @@ void CMakeCbpParser::parseProject()
             parseUnit();
         else if (name() == QLatin1String("Build"))
             parseBuild();
+        else if (name() == QLatin1String("Compiler"))
+            parseProjectCompiler();
         else if (isStartElement())
             parseUnknownElement();
     }
@@ -372,6 +374,14 @@ void CMakeCbpParser::parseBuildTargetClean()
         else if (isStartElement())
             parseUnknownElement();
     }
+}
+
+void CMakeCbpParser::parseProjectCompiler()
+{
+    m_projectTarget.clear();
+    m_buildTarget.clear();
+    parseCompiler();
+    m_projectTarget = m_buildTarget;
 }
 
 void CMakeCbpParser::parseCompiler()

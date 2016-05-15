@@ -83,6 +83,7 @@ public:
     bool isProjectFile(const Utils::FileName &fileName) const;
     QString projectName() const;
     QList<CMakeBuildTarget> buildTargets() const;
+    const CMakeBuildTarget &projectTarget() const { return m_projectTarget; }
     QList<ProjectExplorer::FileNode *> files();
     void clearFiles();
     CMakeConfig parsedConfiguration() const;
@@ -116,6 +117,7 @@ private:
     QSet<Utils::FileName> m_watchedFiles;
     QString m_projectName;
     QList<CMakeBuildTarget> m_buildTargets;
+    CMakeBuildTarget m_projectTarget;
     QFileSystemWatcher *m_watcher;
     QList<ProjectExplorer::FileNode *> m_files;
 

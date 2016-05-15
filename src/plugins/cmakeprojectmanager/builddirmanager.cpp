@@ -174,6 +174,7 @@ void BuildDirManager::resetData()
 
     m_projectName.clear();
     m_buildTargets.clear();
+    m_projectTarget.clear();
     m_watchedFiles.clear();
     qDeleteAll(m_files);
     m_files.clear();
@@ -377,6 +378,7 @@ void BuildDirManager::extractData()
     m_watcher->addPaths(toWatch);
 
     m_buildTargets = cbpparser.buildTargets();
+    m_projectTarget = cbpparser.projectTarget();
 }
 
 void BuildDirManager::startCMake(CMakeTool *tool, const QString &generator,

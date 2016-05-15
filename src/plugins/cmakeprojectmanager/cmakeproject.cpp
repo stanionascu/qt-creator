@@ -244,16 +244,23 @@ void CMakeProject::parseCMakeOutput()
     ppBuilder.setQtVersion(activeQtVersion);
 
     QHash<QString, QStringList> targetDataCache;
+    const auto &pcbt = projectTarget();
     foreach (const CMakeBuildTarget &cbt, buildTargets()) {
         // This explicitly adds -I. to the include paths
         QStringList includePaths = cbt.includeFiles;
         includePaths += projectDirectory().toString();
         ppBuilder.setIncludePaths(includePaths);
-        QStringList cxxflags = getCXXFlagsFor(cbt, targetDataCache) +
-                cbt.compilerOptions;
+        QStringList cxxflags = pcbt.compilerOptions;
+        // If there are no project compiler flags => get them from the makefile
+        if (cxxflags.empty()) {
+            cxxflags = getCXXFlagsFor(cbt, targetDataCache);
+        }
+        cxxflags += cbt.compilerOptions;
         ppBuilder.setCFlags(cxxflags);
         ppBuilder.setCxxFlags(cxxflags);
-        ppBuilder.setDefines(cbt.defines);
+        QByteArray defines = pcbt.defines;
+        defines += cbt.defines;
+        ppBuilder.setDefines(defines);
         ppBuilder.setDisplayName(cbt.title);
 
         const QList<Core::Id> languages = ppBuilder.createProjectPartsForFiles(cbt.files);
@@ -318,6 +325,18 @@ QList<CMakeBuildTarget> CMakeProject::buildTargets() const
     if (!bdm)
         return QList<CMakeBuildTarget>();
     return bdm->buildTargets();
+}
+
+const CMakeBuildTarget &CMakeProject::projectTarget() const
+{
+    BuildDirManager *bdm = nullptr;
+    if (activeTarget() && activeTarget()->activeBuildConfiguration())
+        bdm = static_cast<CMakeBuildConfiguration *>(activeTarget()->activeBuildConfiguration())->buildDirManager();
+    if (!bdm) {
+        static CMakeBuildTarget emptyTarget;
+        return emptyTarget;
+    }
+    return bdm->projectTarget();
 }
 
 QStringList CMakeProject::buildTargetTitles(bool runnable) const

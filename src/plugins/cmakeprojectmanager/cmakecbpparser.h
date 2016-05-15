@@ -51,6 +51,7 @@ public:
     QList<ProjectExplorer::FileNode *> fileList();
     QList<ProjectExplorer::FileNode *> cmakeFileList();
     QList<CMakeBuildTarget> buildTargets();
+    const CMakeBuildTarget &projectTarget() const { return m_projectTarget; }
     QString projectName() const;
     QString compilerName() const;
     bool hasCMakeFiles();
@@ -65,6 +66,7 @@ private:
     void parseMakeCommands();
     void parseBuildTargetBuild();
     void parseBuildTargetClean();
+    void parseProjectCompiler();
     void parseCompiler();
     void parseAdd();
     void parseUnit();
@@ -81,6 +83,7 @@ private:
 
     CMakeBuildTarget m_buildTarget;
     QList<CMakeBuildTarget> m_buildTargets;
+    CMakeBuildTarget m_projectTarget;
     QString m_projectName;
     QString m_compiler;
     QString m_sourceDirectory;
