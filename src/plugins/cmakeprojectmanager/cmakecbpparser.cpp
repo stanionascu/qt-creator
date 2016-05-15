@@ -33,6 +33,7 @@
 #include <projectexplorer/projectnodes.h>
 
 #include <QLoggingCategory>
+#include <QRegularExpression>
 
 using namespace ProjectExplorer;
 using namespace Utils;
@@ -405,7 +406,7 @@ void CMakeCbpParser::parseAdd()
     // defining multiple times a macro to the same value makes no sense
     if (!compilerOption.isEmpty() && !m_buildTarget.compilerOptions.contains(compilerOption)) {
         m_buildTarget.compilerOptions.append(compilerOption);
-        int macroNameIndex = compilerOption.indexOf(QLatin1String("-D")) + 2;
+        int macroNameIndex = compilerOption.indexOf(QRegularExpression(QLatin1String("(-D|/D)"))) + 2;
         if (macroNameIndex != 1) {
             int assignIndex = compilerOption.indexOf(QLatin1Char('='), macroNameIndex);
             if (assignIndex != -1)
