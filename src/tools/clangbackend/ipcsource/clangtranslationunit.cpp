@@ -529,7 +529,8 @@ uint TranslationUnit::defaultOptions()
     return CXTranslationUnit_CacheCompletionResults
          | CXTranslationUnit_PrecompiledPreamble
          | CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
-         | CXTranslationUnit_DetailedPreprocessingRecord;
+         | CXTranslationUnit_DetailedPreprocessingRecord
+         | CXTranslationUnit_KeepGoing;
 }
 
 uint TranslationUnit::unsavedFilesCount() const
