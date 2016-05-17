@@ -249,7 +249,8 @@ void CMakeProject::parseCMakeOutput()
         QStringList includePaths = cbt.includeFiles;
         includePaths += projectDirectory().toString();
         ppBuilder.setIncludePaths(includePaths);
-        QStringList cxxflags = getCXXFlagsFor(cbt, targetDataCache);
+        QStringList cxxflags = getCXXFlagsFor(cbt, targetDataCache) +
+                cbt.compilerOptions;
         ppBuilder.setCFlags(cxxflags);
         ppBuilder.setCxxFlags(cxxflags);
         ppBuilder.setDefines(cbt.defines);
