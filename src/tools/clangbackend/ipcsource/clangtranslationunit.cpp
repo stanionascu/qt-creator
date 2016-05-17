@@ -51,6 +51,8 @@
 
 #include <ostream>
 
+#include <clang/Basic/Version.h>
+
 static Q_LOGGING_CATEGORY(verboseLibLog, "qtc.clangbackend.verboselib");
 
 static bool isVerboseModeEnabled()
@@ -526,11 +528,15 @@ SourceLocation TranslationUnit::sourceLocationAtWithoutReparsing(uint line, uint
 
 uint TranslationUnit::defaultOptions()
 {
-    return CXTranslationUnit_CacheCompletionResults
-         | CXTranslationUnit_PrecompiledPreamble
-         | CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
-         | CXTranslationUnit_DetailedPreprocessingRecord
-         | CXTranslationUnit_KeepGoing;
+    uint options = CXTranslationUnit_CacheCompletionResults
+            | CXTranslationUnit_PrecompiledPreamble
+            | CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
+            | CXTranslationUnit_DetailedPreprocessingRecord
+            | CXTranslationUnit_Incomplete;
+#if CLANG_VERSION_MAJOR >= 3 && CLANG_VERSION_MINOR >= 9
+    options |= CXTranslationUnit_KeepGoing;
+#endif
+    return options;
 }
 
 uint TranslationUnit::unsavedFilesCount() const
