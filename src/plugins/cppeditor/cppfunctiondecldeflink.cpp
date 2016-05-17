@@ -484,7 +484,7 @@ static int findUniqueTypeMatch(int sourceParamIndex, Function *sourceFunction, F
         int otherSourceParamIndex = sourceParams.at(i);
         if (sourceParamIndex == otherSourceParamIndex)
             continue;
-        if (sourceParam->type().match(sourceFunction->argumentAt(otherSourceParamIndex)->type()))
+        if (sourceParam->type().signatureTypeMatch(sourceFunction->argumentAt(otherSourceParamIndex)->type()))
             return -1;
     }
 
@@ -493,7 +493,7 @@ static int findUniqueTypeMatch(int sourceParamIndex, Function *sourceFunction, F
     int newParamWithSameTypeIndex = -1;
     for (int i = 0; i < newParams.size(); ++i) {
         int newParamIndex = newParams.at(i);
-        if (sourceParam->type().match(newFunction->argumentAt(newParamIndex)->type())) {
+        if (sourceParam->type().signatureTypeMatch(newFunction->argumentAt(newParamIndex)->type())) {
             if (newParamWithSameTypeIndex != -1)
                 return -1;
             newParamWithSameTypeIndex = newParamIndex;
@@ -810,8 +810,8 @@ ChangeSet FunctionDeclDefLink::changes(const Snapshot &snapshot, int targetOffse
                     renamedTargetParameters[targetParam] = overview.prettyName(replacementName);
 
                 // need to change the type (and name)?
-                if (!newParam->type().match(sourceParam->type())
-                        && !newParam->type().match(targetParam->type())) {
+                if (!newParam->type().signatureTypeMatch(sourceParam->type())
+                        && !newParam->type().signatureTypeMatch(targetParam->type())) {
                     const int parameterTypeStart = targetFile->startOf(targetParamAst);
                     int parameterTypeEnd = 0;
                     if (targetParamAst->declarator)

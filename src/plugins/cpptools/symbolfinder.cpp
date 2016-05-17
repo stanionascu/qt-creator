@@ -180,18 +180,7 @@ Function *SymbolFinder::findMatchingDefinition(Symbol *declaration,
                     if (!strict && !best)
                         best = fun;
 
-                    const unsigned argc = declarationTy->argumentCount();
-                    unsigned argIt = 0;
-                    for (; argIt < argc; ++argIt) {
-                        Symbol *arg = fun->argumentAt(argIt);
-                        Symbol *otherArg = declarationTy->argumentAt(argIt);
-                        if (!arg->type().match(otherArg->type()))
-                            break;
-                    }
-
-                    if (argIt == argc
-                            && fun->isConst() == declaration->type().isConst()
-                            && fun->isVolatile() == declaration->type().isVolatile()) {
+                    if (fun->isSignatureEqualTo(declarationTy)) {
                         best = fun;
                     }
                 }

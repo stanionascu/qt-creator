@@ -104,6 +104,7 @@ public:
     bool operator != (const FullySpecifiedType &other) const;
     bool operator < (const FullySpecifiedType &other) const;
 
+    bool signatureTypeMatch(const FullySpecifiedType &otherTy, Matcher *matcher = 0) const;
     bool match(const FullySpecifiedType &otherTy, Matcher *matcher = 0) const;
 
     FullySpecifiedType simplified() const;
