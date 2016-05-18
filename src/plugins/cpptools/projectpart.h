@@ -113,6 +113,7 @@ public: // fields
     CPlusPlus::LanguageFeatures languageFeatures;
     QtVersion qtVersion;
     ProjectExplorer::WarningFlags warningFlags;
+    QStringList projectCxxFlags;
     bool selectedForBuilding;
 };
 

@@ -89,6 +89,9 @@ public:
         LibClangOptionsBuilder optionsBuilder(*projectPart.data());
 
         optionsBuilder.addTargetTriple();
+        for (const auto &arg : projectPart->projectCxxFlags) {
+            optionsBuilder.add(arg);
+        }
         optionsBuilder.addLanguageOption(fileKind);
         optionsBuilder.addOptionsForLanguage(/*checkForBorlandExtensions*/ true);
         optionsBuilder.enableExceptions();

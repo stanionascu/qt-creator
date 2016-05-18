@@ -341,6 +341,7 @@ void ProjectPartBuilder::evaluateProjectPartToolchain(
             projectPart->headerPaths.push_back(headerPath);
     }
 
+    projectPart->projectCxxFlags = commandLineFlags;
     projectPart->toolchainDefines = toolChain->predefinedMacros(commandLineFlags);
     projectPart->toolchainType = toolChain->typeId();
     projectPart->isMsvc2015Toolchain
