@@ -62,6 +62,36 @@ static bool isVerboseModeEnabled()
 
 namespace ClangBackEnd {
 
+struct GlobalCXIndex
+{
+    GlobalCXIndex()
+    {
+        ++ useCount;
+        if (!cindex) {
+            cindex = clang_createIndex(1, isVerboseModeEnabled());
+        }
+    }
+
+    ~GlobalCXIndex()
+    {
+        if (useCount > 0)
+            -- useCount;
+        if (useCount == 0) {
+            clang_disposeIndex(cindex);
+            cindex = nullptr;
+        }
+    }
+
+    CXIndex index() const { return cindex; }
+
+private:
+    static CXIndex cindex;
+    static size_t useCount;
+};
+
+CXIndex GlobalCXIndex::cindex = nullptr;
+size_t GlobalCXIndex::useCount = size_t(0);
+
 class TranslationUnitData
 {
 public:
@@ -81,7 +111,7 @@ public:
     CXTranslationUnit translationUnit = nullptr;
     CXErrorCode parseErrorCode = CXError_Success;
     int reparseErrorCode = 0;
-    CXIndex index = nullptr;
+    GlobalCXIndex index;
     uint documentRevision = 0;
     bool needsToBeReparsed = false;
     bool hasNewDiagnostics = true;
@@ -106,7 +136,6 @@ TranslationUnitData::TranslationUnitData(const Utf8String &filePath,
 TranslationUnitData::~TranslationUnitData()
 {
     clang_disposeTranslationUnit(translationUnit);
-    clang_disposeIndex(index);
 }
 
 TranslationUnit::TranslationUnit(const Utf8String &filePath,
@@ -174,12 +203,7 @@ CXIndex TranslationUnit::index() const
 {
     checkIfNull();
 
-    if (!d->index) {
-        const bool displayDiagnostics = isVerboseModeEnabled();
-        d->index = clang_createIndex(1, displayDiagnostics);
-    }
-
-    return d->index;
+    return d->index.index();
 }
 
 CXTranslationUnit TranslationUnit::cxTranslationUnit() const
