@@ -531,8 +531,7 @@ uint TranslationUnit::defaultOptions()
     uint options = CXTranslationUnit_CacheCompletionResults
             | CXTranslationUnit_PrecompiledPreamble
             | CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
-            | CXTranslationUnit_DetailedPreprocessingRecord
-            | CXTranslationUnit_Incomplete;
+            | CXTranslationUnit_DetailedPreprocessingRecord;
 #if CLANG_VERSION_MAJOR >= 3 && CLANG_VERSION_MINOR >= 9
     options |= CXTranslationUnit_KeepGoing;
 #endif
