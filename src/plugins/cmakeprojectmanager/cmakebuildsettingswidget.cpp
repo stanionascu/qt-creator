@@ -166,8 +166,6 @@ CMakeBuildSettingsWidget::CMakeBuildSettingsWidget(CMakeBuildConfiguration *bc) 
                     QVariant::fromValue(static_cast<int>(ConfigModel::DataItem::DIRECTORY)));
         m_addButtonMenu->addAction(tr("&File"))->setData(
                     QVariant::fromValue(static_cast<int>(ConfigModel::DataItem::FILE)));
-        m_addButtonMenu->addAction(tr("&Unknown"))->setData(
-                    QVariant::fromValue(static_cast<int>(ConfigModel::DataItem::UNKNOWN)));
         m_addButton->setMenu(m_addButtonMenu);
     }
     m_editButton = new QPushButton(tr("&Edit"));
